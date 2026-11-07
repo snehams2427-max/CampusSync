@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CampusSync · Event Clash Detector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-in">
+      <div class="brand">
+        <div class="logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+        </div>
+        <span>CampusSync</span>
+      </div>
+      <span id="status" class="status off"><i></i><b>Connecting</b></span>
+    </div>
+  </header>
+
+  <main class="app">
+    <div class="intro">
+      <h1>Event clash detector</h1>
+      <p>Register events, catch clashes instantly and get smarter time slots.</p>
+    </div>
+
+    <div class="grid">
+      <div class="stack">
+        <section class="card">
+          <h2>New event</h2>
+
+          <label class="field"><span>Event name</span>
+            <input id="name" placeholder="e.g. Hackathon Kickoff" autocomplete="off">
+          </label>
+          <div class="row">
+            <label class="field"><span>Club / Society</span>
+              <input id="club" placeholder="Coding Club" autocomplete="off">
+            </label>
+            <label class="field"><span>Venue</span>
+              <input id="venue" placeholder="A101" autocomplete="off">
+            </label>
+          </div>
+
+          <div class="segs">
+            <button type="button" class="seg" data-tab="date"><small>Date</small><b id="vDate"></b></button>
+            <button type="button" class="seg active" data-tab="start"><small>Starts</small><b id="vStart"></b></button>
+            <button type="button" class="seg" data-tab="end"><small>Ends</small><b id="vEnd"></b></button>
+          </div>
+
+          <div class="wheels" id="p-date" hidden>
+            <div id="wDay"></div>
+            <div id="wMonth"></div>
+            <div id="wYear"></div>
+          </div>
+          <div class="wheels" id="p-start">
+            <div id="sH"></div><span class="colon">:</span><div id="sM"></div><div id="sA"></div>
+          </div>
+          <div class="wheels" id="p-end" hidden>
+            <div id="eH"></div><span class="colon">:</span><div id="eM"></div><div id="eA"></div>
+          </div>
+
+          <p id="summary" class="summary"></p>
+          <button id="add" class="primary">Check &amp; add event</button>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section id="result"></section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2>Registered events</h2>
+            <span id="count" class="pill">0</span>
+          </div>
+          <div id="list"></div>
+        </section>
+      </div>
+    </div>
+
+    <section class="card">
+      <h2>Analytics</h2>
+      <div id="tiles" class="tiles"></div>
+      <div class="two">
+        <div>
+          <h3>Events by hour</h3>
+          <div id="chart"></div>
+        </div>
+        <div>
+          <h3>Clubs with conflicts</h3>
+          <div id="clubs"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
