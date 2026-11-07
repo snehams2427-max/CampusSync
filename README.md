@@ -5,7 +5,7 @@
 - Sneha M S, CSE-2, Scholar No. 25112011254
 - Krishna Upadhyay, CSE-2, Scholar No. 25112011236
 
-**Live demo:** <paste your Render link here>
+**Live demo:** https://campussync-sguu.onrender.com
 
 ## What it does
 CampusSync lets clubs register events (name, club, venue, date, start and
