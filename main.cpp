@@ -203,7 +203,7 @@ void loadEvents() {
 }
 int main() {
     httplib::Server svr;
-    svr.set_mount_point("/", "./public");
+    svr.set_mount_point("/", "./Public");
     loadEvents();
     svr.set_default_headers({{"Access-Control-Allow-Origin", "*"}});
 
