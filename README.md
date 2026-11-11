@@ -45,6 +45,6 @@ Time ranges are [start, end), so 2-3 PM and 3-4 PM do not clash.
 3. Open http://localhost:8080 in a browser
 
 ## Known limitation
-The interval tree is not self-balancing, so worst-case operations can take O(n) time. An AVL-based interval tree could improve performance.
-Events are stored in a local text file. A database could provide more robust persistence and data management.
-The current system assumes valid date and time inputs; stronger input validation can improve reliability.
+> The interval tree is not self-balancing, so worst-case operations can take O(n) time. An AVL-based interval tree could improve performance.
+> Events are stored in a local text file. A database could provide more robust persistence and data management.
+> The current system assumes valid date and time inputs; stronger input validation can improve reliability.
