@@ -8,6 +8,7 @@
 #include "stats.h"
 #include <fstream>
 #include <sstream>
+#include <cctype>
 using namespace std;
 
 struct Event {
@@ -93,12 +94,29 @@ string fmt(int m) {                      // 870 -> "14:30"
     return string(buf);
 }
 
+string escapeJson(const string& s) {
+    string out;
+
+    for (char c : s) {
+        switch (c) {
+            case '"':  out += "\\\""; break;
+            case '\\': out += "\\\\"; break;
+            case '\n': out += "\\n"; break;
+            case '\r': out += "\\r"; break;
+            case '\t': out += "\\t"; break;
+            default:   out += c;
+        }
+    }
+
+    return out;
+}
+
 string toJson(const Event& e) {
     return "{\"id\":" + to_string(e.id) +
-           ",\"name\":\"" + e.name + "\"" +
-           ",\"club\":\"" + e.club + "\"" +
-           ",\"venue\":\"" + e.venue + "\"" +
-           ",\"date\":\"" + e.date + "\"" +
+           ",\"name\":\"" + escapeJson(e.name) + "\"" +
+           ",\"club\":\"" + escapeJson(e.club) + "\"" +
+           ",\"venue\":\"" + escapeJson(e.venue) + "\"" +
+           ",\"date\":\"" + escapeJson(e.date) + "\"" +
            ",\"start\":" + to_string(e.start) +
            ",\"end\":" + to_string(e.end) + "}";
 }
@@ -177,6 +195,22 @@ string suggest(const Event& e) {
     out += "]";
     return out;
 }
+
+bool validTime(const string& t) {
+    if (t.size() != 5 || t[2] != ':')
+        return false;
+
+    if (!isdigit(t[0]) || !isdigit(t[1]) ||
+        !isdigit(t[3]) || !isdigit(t[4]))
+        return false;
+
+    int h = stoi(t.substr(0, 2));
+    int m = stoi(t.substr(3, 2));
+
+    return h >= 0 && h <= 23 &&
+           m >= 0 && m <= 59;
+}
+
 void saveEvent(const Event& e) {
     ofstream f("events.txt", ios::app);
     f << e.name << "|" << e.club << "|" << e.venue << "|" << e.date << "|"
@@ -214,9 +248,20 @@ int main() {
         e.club  = req.get_param_value("club");
         e.venue = req.get_param_value("venue");
         e.date  = req.get_param_value("date");
-        e.start = toMinutes(req.get_param_value("start"));
-        e.end   = toMinutes(req.get_param_value("end"));
+        string startTime = req.get_param_value("start");
+        string endTime = req.get_param_value("end");
 
+        if (!validTime(startTime) || !validTime(endTime)) {
+            res.set_content(
+                "{\"added\":false,\"error\":\"Invalid time format\"}",
+                "application/json"
+            );
+        return;
+        }
+
+        e.start = toMinutes(startTime);
+        e.end = toMinutes(endTime);
+        
         if (e.end <= e.start) {
             res.set_content("{\"added\":false,\"error\":\"End time must be after start time\",\"clashes\":[],\"suggestions\":[]}",
                             "application/json");
