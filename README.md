@@ -14,12 +14,21 @@ explains why an event was rejected, and suggests the 3 best alternative
 time slots. It also shows a registered-events list and conflict analytics.
 Date and time are set with alarm-style scroll wheels.
 
-## Data structures (all implemented from scratch in C++)
-| Data structure | Used for | Complexity |
+## Data Structures
+
+| Data Structure | Used For | Time Complexity |
 |---|---|---|
-| Hash table (chaining) | Find an event by ID | O(1) average |
-| Interval tree | Find events with overlapping time ranges | O(log n + k) typical |
-| Min-heap (priority queue) | Rank alternative slots by score | O(log n) push/pop |
+| Hash Table (Chaining) | Finding an event by ID | O(1) average, O(n) worst case |
+| Interval Tree | Inserting an event interval | O(h) |
+| Interval Tree | Finding overlapping intervals | O(n) worst case |
+| Min-Heap (Priority Queue) | Inserting a suggestion | O(log n) |
+| Min-Heap (Priority Queue) | Extracting the minimum-scored suggestion | O(log n) |
+
+**Note:** The interval tree is not self-balancing. Therefore, its height can reach O(n) in the worst case. Here, h represents the height of the tree.
+
+An event is considered conflicting when its time interval overlaps with an existing event AND either its venue or club matches. The interval tree first identifies overlapping events, while the hash table retrieves their complete details using event IDs.
+
+Alternative slots are generated at 30-minute intervals. Each candidate retains the original event duration and is checked against existing events. Valid candidates are assigned scores based on their time difference from the requested slot and a penalty for scheduling outside preferred operating hours. A custom min-heap extracts the three lowest-scoring suggestions.
 
 Scoring rule: minutes away from the requested time, plus a penalty of 120
 for slots outside 9:00 AM to 6:00 PM. Lower score = better suggestion.
@@ -36,5 +45,6 @@ Time ranges are [start, end), so 2-3 PM and 3-4 PM do not clash.
 3. Open http://localhost:8080 in a browser
 
 ## Known limitation
-The interval tree is not self-balancing; an AVL-based version would
-guarantee O(log n).
+The interval tree is not self-balancing, so worst-case operations can take O(n) time. An AVL-based interval tree could improve performance.
+Events are stored in a local text file. A database could provide more robust persistence and data management.
+The current system assumes valid date and time inputs; stronger input validation can improve reliability.
